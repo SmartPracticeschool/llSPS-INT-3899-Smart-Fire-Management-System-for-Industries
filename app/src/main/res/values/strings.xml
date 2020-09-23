@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Http Request</string>
+    <string name="get">GET</string>
+    <string name="clear">Clear</string>
+    <string name="endpoint">Endpoint</string>
+    <string name="response_status">Response Status</string>
+    <string name="response">Response</string>
+</resources>
