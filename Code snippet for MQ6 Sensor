@@ -1,0 +1,157 @@
+#include <LiquidCrystal.h>//import the LCD library
+
+LiquidCrystal lcd(13, 12, 5, 4, 3, 2); // Sensor sensitivity value set
+
+int Ref[8] = { 0,200,250,300,350,400,450,500};
+
+// the setup routine runs once when you press reset:
+
+int KEY1=A5;              // RIGHT KEY
+
+int KEY2=A4;              //LEFT KEY
+
+int buzzer=6;             // For buzzer 
+
+int Setref=0;             // user set sensor value
+
+int count=0;             //to count the number of times key pressed
+
+int sensorValue=0;       //for current sensor value
+
+void setup() {
+
+  // initialize serial communication at 9600 bits per second:
+
+  Serial.begin(9600);
+
+  pinMode(KEY1, INPUT);
+
+  pinMode(KEY2, INPUT);
+
+  pinMode(buzzer, OUTPUT);
+
+  lcd.begin(16,2);
+
+  lcd.setCursor(0,0);
+
+  lcd.print("Engineers Garage");
+
+  lcd.setCursor(0,1);
+
+  lcd.print(" MQ6 Gas Sensor ");  
+
+  delay(3000);
+
+  lcd.setCursor(0,1);
+
+  lcd.print("                ");   
+
+
+}
+
+
+// the loop routine runs over and over again forever:
+
+void loop() {
+
+  // read the input on analog pin 0:
+
+  lcd.setCursor(0,0);
+
+  lcd.print("Press Left Bttn ");
+
+  lcd.setCursor(0,1);
+
+  lcd.print("Set Sensitive");
+
+  digitalWrite(buzzer,LOW);
+
+ if(digitalRead(KEY2) == 0)
+
+ {
+
+    count++;
+
+    Setref=Ref[count];
+
+    lcd.setCursor(13,1);
+
+    lcd.print(Setref);
+
+    if(count==8)
+
+    {count=0;}
+
+    delay(200);
+
+ }
+
+  if((digitalRead(KEY1) == 0) && count > 0)
+
+   {
+
+    lcd.setCursor(0,0);
+
+    lcd.print("Sensitivity =");
+
+    lcd.setCursor(13,0);
+
+    lcd.print(Setref);
+
+    lcd.setCursor(0,1);
+
+    lcd.print("MQ6 sensor        ");
+
+    
+
+   while(1)
+
+   {
+
+  sensorValue = analogRead(A0);
+
+  lcd.setCursor(11,1);
+
+  lcd.print(sensorValue  );
+
+  delay(1);        // delay in between reads for stability
+
+  if(Setref==sensorValue)
+
+  {
+
+    lcd.setCursor(0,0);
+
+    lcd.print("Alert!!         ");
+
+    lcd.setCursor(0,1);
+
+    lcd.print("Alert!!         ");
+
+    for(int i=0;i<=5;i++)
+
+    {
+
+    digitalWrite(buzzer,HIGH);
+
+    delay(500);
+
+    digitalWrite(buzzer,LOW);
+
+    delay(500);
+
+    }
+
+    delay(3000);
+
+    count=0;
+
+    break;
+
+  }
+
+  }
+
+   }
+
+ }
